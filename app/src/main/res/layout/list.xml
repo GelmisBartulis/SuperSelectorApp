@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal" >
 
     <ImageView
@@ -40,6 +41,7 @@
         android:layout_gravity="right|end"
         android:layout_weight="1"
         android:layoutDirection="rtl"
+        android:textColor="#444"
         android:text="Select"
         android:textAlignment="textEnd" />
 </LinearLayout>

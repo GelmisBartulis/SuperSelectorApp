@@ -4,24 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private CheckBox cb;
     private Button next;
+    private ListView list;
+    private LoadList adapter;
+    String[] selected = {};
+
 
     Integer[] imgid={
             R.drawable.profile_1, R.drawable.profile_2,
@@ -36,66 +37,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        LoadData loadData = new LoadData();
 
         next = findViewById(R.id.next);
 
-
-        LoadData loadData = new LoadData();
-        String[] names = loadData.loadArrayData(this, "name");
+        final String[] names = loadData.loadArrayData(this, "name");
         String[] isActive = loadData.loadArrayData(this, "isActive");
-
-        final LoadList adapter = new LoadList(this, names, isActive, true, imgid);
-        ListView list = findViewById(R.id.song_list);
-        list.setAdapter(adapter);
-
-//
-//        public void onSubmit(View v)
-//        {
-//            SparseBooleanArray checked = listview.getCheckedItemPositions();
-//            ArrayList<String> selectedItems = new ArrayList<String>();
-//            for (int i = 0; i < checked.size(); i++) {
-//                // Item position in adapter
-//                int position = checked.keyAt(i);
-//                // Add player if it is checked i.e.) == TRUE!
-//                if (checked.valueAt(i))
-//                    selectedItems.add(adapter.getItem(position));
-//            }
-//
-//            // String[] outputStrArr = new String[selectedItems.size()];
-//
-//            for (int i = 0; i < selectedItems.size(); i++) {
-//                // outputStrArr[i] = selectedItems.get(i);
-//                Toast.makeText(getApplicationContext(), selectedItems.get(i),Toast.LENGTH_LONG).show();
-//            }
-//
-//        }
+        adapter = new LoadList(this, names, isActive, imgid);
+        final ListView listView = (ListView) findViewById(R.id.song_list);
+        listView.setAdapter(adapter);
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                StringBuilder result = new StringBuilder();
+                for(int i=0;i<adapter.mCheckStates.size();i++) {
+                    if(adapter.mCheckStates.get(i)) {
+                        result.append(names[i]);
+                        result.append("\n");
 
-            }
-        });
+                        String str = result.toString();
+                        selected = str.split("TABTAB");
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-
-                Log.i("Changes", i + " ");
-
-
-
-
-//
-//
-//                    Intent intent = new Intent(getApplicationContext(), ShowUser.class);
-//                    intent.putExtra("id", i);
-//                    startActivity(intent);
+                        Intent intent = new Intent(getApplicationContext(), ShowUser.class);
+                        intent.putExtra("names", selected);
+                    }
+                }
+                Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }
