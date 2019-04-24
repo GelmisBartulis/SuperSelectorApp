@@ -21,7 +21,10 @@ public class MainActivity extends AppCompatActivity {
     private Button next;
     private ListView list;
     private LoadList adapter;
-    String[] selected = {};
+    String[] selected, iter;
+    ArrayList<Integer> userList;
+
+
 
 
     Integer[] imgid={
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         LoadData loadData = new LoadData();
 
         next = findViewById(R.id.next);
-
+        userList = new ArrayList<Integer>();
         final String[] names = loadData.loadArrayData(this, "name");
         String[] isActive = loadData.loadArrayData(this, "isActive");
         adapter = new LoadList(this, names, isActive, imgid);
@@ -50,20 +53,29 @@ public class MainActivity extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringBuilder result = new StringBuilder();
-                for(int i=0;i<adapter.mCheckStates.size();i++) {
-                    if(adapter.mCheckStates.get(i)) {
-                        result.append(names[i]);
-                        result.append("\n");
+                String str  = "";
+                if(adapter.mCheckStates.size() > 0) {
 
-                        String str = result.toString();
-                        selected = str.split("TABTAB");
+                    StringBuilder result = new StringBuilder();
+                    for(int i=0;i<adapter.mCheckStates.size();i++) {
+                        if(adapter.mCheckStates.get(i)) {
+                            result.append(names[i]);
+                            result.append("\n");
 
-                        Intent intent = new Intent(getApplicationContext(), ShowUser.class);
-                        intent.putExtra("names", selected);
+                            str = result.toString();
+                            userList.add(i);
+                            selected = str.split("[\\r\\n]+");
+                        }
                     }
+                    iter = userList.toArray(new String[userList.size()]);
+
+                    Intent intent = new Intent(getApplicationContext(), ShowUser.class);
+                    intent.putExtra("names", selected);
+                    intent.putExtra("iter", iter);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MainActivity.this, "Sorry, you didn't select anything", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
             }
         });
     }

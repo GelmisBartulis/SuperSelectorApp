@@ -1,7 +1,6 @@
 package com.ge20070469.customlists;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,11 +8,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class LoadData {
+
     String[] output;
     String id, name, age, about, isActive;
     ArrayList<String> userList;
@@ -49,6 +47,33 @@ public class LoadData {
                     case "isActive":
                         userList.add(isActive);
                         break;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        output = userList.toArray(new String[userList.size()]);
+
+        return output;
+    }
+
+
+    public String[] loadArrayData(Context context, String[] names) {
+
+        try {
+            JSONArray obj = new JSONArray(loadJSONFromAsset(context));
+
+            userList = new ArrayList<String>();
+
+            for(int j = 0; j < names.length; j++) {
+
+                for (int i = 0; i < obj.length(); i++) {
+                    JSONObject info = obj.getJSONObject(i);
+                    name = info.getString("name");
+                    if(names[j].equals(name)) {
+                        userList.add(name);
+                    }
                 }
             }
         } catch (JSONException e) {

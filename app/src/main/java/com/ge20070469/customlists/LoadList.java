@@ -26,8 +26,11 @@ public class LoadList extends ArrayAdapter<String> implements CompoundButton.OnC
         this.subtitle=subtitle;
         this.imgid=imgid;
         mCheckStates = new SparseBooleanArray(maintitle.length);
-
     }
+
+
+
+
 
     public View getView(int position,View view,ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
