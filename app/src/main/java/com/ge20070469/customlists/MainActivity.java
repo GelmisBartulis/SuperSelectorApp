@@ -21,11 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button next;
     private ListView list;
     private LoadList adapter;
-    String[] selected, iter;
-    ArrayList<Integer> userList;
-
-
-
+    private String[] selected;
 
     Integer[] imgid={
             R.drawable.profile_1, R.drawable.profile_2,
@@ -43,10 +39,9 @@ public class MainActivity extends AppCompatActivity {
         LoadData loadData = new LoadData();
 
         next = findViewById(R.id.next);
-        userList = new ArrayList<Integer>();
         final String[] names = loadData.loadArrayData(this, "name");
         String[] isActive = loadData.loadArrayData(this, "isActive");
-        adapter = new LoadList(this, names, isActive, imgid);
+        adapter = new LoadList(this,names, isActive, imgid, R.layout.list );
         final ListView listView = (ListView) findViewById(R.id.song_list);
         listView.setAdapter(adapter);
 
@@ -55,23 +50,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String str  = "";
                 if(adapter.mCheckStates.size() > 0) {
-
                     StringBuilder result = new StringBuilder();
                     for(int i=0;i<adapter.mCheckStates.size();i++) {
                         if(adapter.mCheckStates.get(i)) {
                             result.append(names[i]);
                             result.append("\n");
-
                             str = result.toString();
-                            userList.add(i);
                             selected = str.split("[\\r\\n]+");
                         }
                     }
-                    iter = userList.toArray(new String[userList.size()]);
-
                     Intent intent = new Intent(getApplicationContext(), ShowUser.class);
                     intent.putExtra("names", selected);
-                    intent.putExtra("iter", iter);
                     startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "Sorry, you didn't select anything", Toast.LENGTH_SHORT).show();

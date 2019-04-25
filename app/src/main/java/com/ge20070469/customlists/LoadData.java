@@ -1,28 +1,25 @@
 package com.ge20070469.customlists;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 public class LoadData {
 
-    String[] output;
-    String id, name, age, about, isActive;
-    ArrayList<String> userList;
+    private String[] output;
+    private String id, name, age, about, isActive, all;
+    private ArrayList<String> userList;
 
     public String[] loadArrayData(Context context, String key) {
-
         try {
             JSONArray obj = new JSONArray(loadJSONFromAsset(context));
-
             userList = new ArrayList<String>();
-
             for (int i = 0; i < obj.length(); i++) {
                 JSONObject info = obj.getJSONObject(i);
                 id = info.getString("_id");
@@ -30,7 +27,6 @@ public class LoadData {
                 name = info.getString("name");
                 about = info.getString("about");
                 isActive = info.getString("isActive");
-
                 switch (key) {
                     case "id":
                         userList.add(id);
@@ -52,22 +48,15 @@ public class LoadData {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         output = userList.toArray(new String[userList.size()]);
-
         return output;
     }
 
-
     public String[] loadArrayData(Context context, String[] names) {
-
         try {
             JSONArray obj = new JSONArray(loadJSONFromAsset(context));
-
             userList = new ArrayList<String>();
-
             for(int j = 0; j < names.length; j++) {
-
                 for (int i = 0; i < obj.length(); i++) {
                     JSONObject info = obj.getJSONObject(i);
                     name = info.getString("name");
@@ -79,12 +68,40 @@ public class LoadData {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         output = userList.toArray(new String[userList.size()]);
-
         return output;
     }
 
+    public String[] loadArrayData(Context context, String username, int placeholder) {
+        try {
+            JSONArray obj = new JSONArray(loadJSONFromAsset(context));
+            userList = new ArrayList<String>();
+            Log.i("Username1", username);
+
+
+            for (int i = 0; i < obj.length(); i++) {
+                JSONObject info = obj.getJSONObject(i);
+                id = info.getString("_id");
+                age = info.getString("age");
+                name = info.getString("name");
+                about = info.getString("about");
+                isActive = info.getString("isActive");
+                if(username.equals(name)) {
+                    userList.add(id);
+                    userList.add(age);
+                    userList.add(name);
+                    userList.add(about);
+                    userList.add(isActive);
+                    break;
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        output = userList.toArray(new String[userList.size()]);
+        return output;
+    }
 
     private String loadJSONFromAsset(Context context) {
         String json = null;

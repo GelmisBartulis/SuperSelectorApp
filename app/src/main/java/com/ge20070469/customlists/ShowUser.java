@@ -17,8 +17,7 @@ public class ShowUser extends AppCompatActivity {
 
     private ListView list;
     private LoadList adapter;
-    String[] selected ;
-    ArrayList<Integer> iter ;
+    private String[] obj ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,42 +33,28 @@ public class ShowUser extends AppCompatActivity {
                 R.drawable.profile_9,  R.drawable.profile_10,
                 R.drawable.profile_11,  R.drawable.profile_12
         };
-
-
-        Bundle extras = getIntent().getExtras();
         Intent i = getIntent();
-
-        String[] obj ;
         obj = i.getStringArrayExtra("names");
-        iter = i.getIntegerArrayListExtra("iter");
-        if (obj != null) {
 
+        if (obj != null) {
             String[] isActive = loadData.loadArrayData(this, "isActive");
             String[] names = loadData.loadArrayData(this, obj);
 
-
-            adapter = new LoadList(this, names, isActive, imgid);
+            adapter = new LoadList(this, names, isActive, imgid, R.layout.list1);
             final ListView listView = findViewById(R.id.song_list);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    Intent intent = new Intent(this, UserInfo.class);
-//                    intent.putExtra("user", position);
+
+                    Log.i("position!!!", " " + parent.getItemAtPosition(position));
+                    String name = parent.getItemAtPosition(position) + "";
+                    Intent intent = new Intent(getApplicationContext(), UserInfo.class);
+                    intent.putExtra("user", name);
+                    startActivity(intent);
                 }
             });
-
-
         }
-
-
-
-
-
-
-
         Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
-
-
     }
 }

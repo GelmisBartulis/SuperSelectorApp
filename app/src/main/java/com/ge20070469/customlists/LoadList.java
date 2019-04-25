@@ -18,58 +18,39 @@ public class LoadList extends ArrayAdapter<String> implements CompoundButton.OnC
     private final String[] maintitle;
     private final String[] subtitle;
     private final Integer[] imgid;
+    private final int layout;
 
-    public LoadList(Activity context, String[] maintitle,String[] subtitle, Integer[] imgid) {
-        super(context, R.layout.list, maintitle);
+    public LoadList(Activity context, String[] maintitle,String[] subtitle, Integer[] imgid, int layout) {
+        super(context, layout, maintitle);
         this.context=context;
         this.maintitle=maintitle;
         this.subtitle=subtitle;
         this.imgid=imgid;
+        this.layout=layout;
         mCheckStates = new SparseBooleanArray(maintitle.length);
     }
-
-
-
-
-
     public View getView(int position,View view,ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.list, null,true);
-
+        View rowView = inflater.inflate(layout, null,true);
         TextView titleText = (TextView) rowView.findViewById(R.id.title);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         TextView subtitleText = (TextView) rowView.findViewById(R.id.subtitle);
         CheckBox checkBox = rowView.findViewById(R.id.checkbox);
-
         titleText.setText(maintitle[position]);
         imageView.setImageResource(imgid[position]);
         subtitleText.setText(subtitle[position]);
-        checkBox.setTag(position);
-        checkBox.setChecked(mCheckStates.get(position, false));
-        checkBox.setOnCheckedChangeListener(this);
-
-
+        if(layout == R.layout.list ) {
+            checkBox.setTag(position);
+            checkBox.setChecked(mCheckStates.get(position, false));
+            checkBox.setOnCheckedChangeListener(this);
+        }
         return rowView;
     }
-
     public boolean isChecked(int position) {
         return mCheckStates.get(position, false);
     }
-
-    public void setChecked(int position, boolean isChecked) {
-        mCheckStates.put(position, isChecked);
-
-    }
-
-    public void toggle(int position) {
-        setChecked(position, !isChecked(position));
-
-    }
+    public void setChecked(int position, boolean isChecked) { mCheckStates.put(position, isChecked); }
+    public void toggle(int position) { setChecked(position, !isChecked(position)); }
     @Override
-    public void onCheckedChanged(CompoundButton buttonView,
-                                 boolean isChecked) {
-
-        mCheckStates.put((Integer) buttonView.getTag(), isChecked);
-
-    }
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) { mCheckStates.put((Integer) buttonView.getTag(), isChecked); }
 }  
